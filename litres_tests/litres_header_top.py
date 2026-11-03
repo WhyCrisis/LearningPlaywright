@@ -34,5 +34,10 @@ class TestUp:
     def test_my_books(self, page:Page):
         page.goto(url)
         page.get_by_role("link", name="Мои книги").click()
+        
+        expect(page.get_by_text("Мои", exact=True)).to_be_visible()
+        expect(page.get_by_text("Отложено")).to_be_visible()
+        expect(page.get_by_text("Списки")).to_be_visible()
+        expect(page.get_by_text("Я слежу")).to_be_visible()
 
 
