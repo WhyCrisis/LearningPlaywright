@@ -1,4 +1,4 @@
-from playwright.sync_api import Page, expect
+from playwright.sync_api import Page
 import re
 
 class HeaderPage:
@@ -14,7 +14,7 @@ class HeaderPage:
         self.catalog_genres_all = page.get_by_role("link", name=re.compile(r"Все .* жанра"))
 
         #Поисковик
-        self.top_search = page.get_by_test_id("search__input")
+        self.top_search_trigger = page.get_by_test_id("search__input")
         self.top_search_find_button = page.get_by_test_id("search__button")
 
         #Пользовательские разделы
@@ -27,5 +27,6 @@ class HeaderPage:
         self.page.goto(f"{self.url}{path}")
 
     def top_search_input(self):
-        self.top_search.fill("Энигма")
+        self.top_search_trigger.click()
+        self.top_search_trigger.fill("Энигма")
         self.top_search_find_button.click()
