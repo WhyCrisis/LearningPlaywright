@@ -58,6 +58,6 @@ class TestHeaderBar:
         b.open()
         b.login_button.click()
 
-        expect(page.get_by_test_id("auth__title"))
+        expect(page.get_by_test_id("auth__title")).to_be_visible()
 
 
