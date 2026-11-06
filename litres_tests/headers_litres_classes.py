@@ -4,7 +4,7 @@ import re
 class HeaderPage:
     def __init__(self, page:Page):
         self.page = page
-        self.url = "https://www.litres.ru/"
+        self.url = "https://www.litres.ru"
 
         #Логотип
         self.logo = page.get_by_test_id("header--logo")
