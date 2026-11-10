@@ -1,5 +1,5 @@
 from playwright.sync_api import expect, Page
-from headers_litres_classes import HeaderPage
+from headers_litres_classes import HeaderPage, HeaderCatalogPage
 
 class TestHeaderBar:
 
@@ -50,3 +50,8 @@ class TestHeaderBar:
         expect(page.get_by_test_id("auth__title")).to_be_visible()
 
 
+#Временные проверки выполняемые вне теста
+    def test_check_title_box(self, header: HeaderPage, page: Page):
+        header.open()
+        header.catalog_genres.click()
+        (header.use(HeaderCatalogPage).wait_catalog_menu_opened().expected_genres_count(20))
