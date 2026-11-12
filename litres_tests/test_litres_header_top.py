@@ -1,5 +1,14 @@
 from playwright.sync_api import expect, Page
 from headers_litres_classes import HeaderPage, HeaderCatalogPage
+from pathlib import Path
+import ast
+import pytest
+
+def load_books():
+    file_path = Path(__file__).parent / "books.txt"
+    with open(file_path, "r", encoding="utf-8") as file:
+        return ast.literal_eval(file.read())
+
 
 class TestHeaderBar:
 
@@ -16,11 +25,12 @@ class TestHeaderBar:
         #Проверка
         expect(page).to_have_url("https://www.litres.ru/pages/new_genres/")
 
-    def test_locator(self, header: HeaderPage, page: Page):
+    @pytest.mark.parametrize("book_name", load_books())
+    def test_locator(self, header: HeaderPage, book_name: str, page: Page):
         header.open()
-        header.top_search_input()
-        #Проверка
-        expect(page.get_by_text("Результаты поиска «Энигма»")).to_be_visible()
+        header.top_search_input(book_name)
+        expect(page.get_by_test_id("search-title__wrapper")).to_contain_text(f"Результаты поиска «{book_name}»")
+        print(f"\nКнига '{book_name}' найдена")
 
     def test_bonus_button(self, header: HeaderPage, page: Page):
         header.open()
@@ -51,7 +61,10 @@ class TestHeaderBar:
 
 
 #Временные проверки выполняемые вне теста
-    def test_check_title_box(self, header: HeaderPage, page: Page):
+    def test_check_title_box(self, header: HeaderPage):
         header.open()
         header.catalog_genres.click()
-        (header.use(HeaderCatalogPage).wait_catalog_menu_opened().expected_genres_count(20))
+        (header.use(HeaderCatalogPage)
+            .wait_catalog_menu_opened()
+            .expected_genres_count(19)
+            .verify_columns_structure())
